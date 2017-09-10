@@ -1,0 +1,26 @@
+from __future__ import print_function
+import pandas as pd
+import urllib2
+wiki="https://en.wikipedia.org/wiki/List_of_cities_in_India_by_population"
+page=urllib2.urlopen(wiki)
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(page)
+right_table=soup.find('table', class_='wikitable sortable')
+a=[]
+b=[]
+c=[]
+d=[]
+for row in right_table.find_all('tr'):
+	cells=row.findAll('td')
+	print(row)
+	if len(cells) in [5,6]:
+		a.append(cells[0].find(text=True))
+		b.append(cells[1].find(text=True))
+		c.append(cells[2].find(text=True))
+		d.append(cells[4].find(text=True))
+df=pd.DataFrame(a,columns=['Rank'])
+df['City']=b
+df['Population (2011)']=c
+df['State / Union Territory']=d
+
+print(df)
